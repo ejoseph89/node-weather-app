@@ -3,16 +3,27 @@ const geocode = require('./utils/geocode')
 const forecast = require('./utils/forecast')
 require('dotenv').config()
 
-// Goal: Address -> Lat/Long -> Weather
-geocode('Ocho Rios', (error, data) => {
-  console.log('Error: ', error)
-  console.log('Data: ', data)
+// Accepting location from the command line
+const place = process.argv[2];
 
-  
-  forecast( data.lattitude, data.longitude, (error, data) => {
-    console.log('Error', error)
-    console.log('Data', data)
+if (!place) {
+
+  console.log('Please provide a valid name of the place')
+} else {
+
+  geocode(place, (error, data) => {
+    if (error) {
+      return console.log(error)
+    }
+    
+    forecast( data.lattitude, data.longitude, (error, forecastData) => {
+      if (error) {
+        return console.log(error)
+      }
+      
+      console.log(data.location)
+      console.log(forecastData)
+      
+    })
   })
-
-
-})
+}
